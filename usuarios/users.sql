@@ -1,5 +1,5 @@
 --alter session set "_ORACLE_SCRIPT"=true;
--- CREACIÓN DE ROLES CON SUS PERMISOS
+-- CREACIï¿½N DE ROLES CON SUS PERMISOS
 create role upd;
 grant UPDATE on ELECCIONES.acta to upd;
 grant UPDATE on ELECCIONES.departamento to upd;
@@ -45,7 +45,7 @@ create role admin;
 grant upd, ins, sel, del, create user to admin;
 
 -------------------------------------------------------------------------------------------------------
--- CREACIÓN DE USUARIOS 
+-- CREACIï¿½N DE USUARIOS 
 
 -- GUEST
 create user guest1 identified by guest1
@@ -106,3 +106,19 @@ default tablespace ELECCIONESTBS;
 
 grant admin to admin2;
 
+--  DAR PRIVILEGIO DE INICIO DE SESIÃ“N
+
+grant create session to guest1;
+grant create session to guest2;
+grant create session to guest3;
+
+grant create session to mesas1;
+grant create session to mesas2;
+grant create session to mesas3;
+grant create session to mesas4;
+
+grant create session to it1;
+grant create session to it2;
+
+grant create session to admin1;
+grant create session to admin2;
