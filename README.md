@@ -18,6 +18,8 @@ Asunción Mariana Sic Sor **_201504051_**
         * [Base de Datos de Equipos](#equipos)
         * [Base de Datos de Jornadas](#jornadas)
     * [Importar](#importar)
+        * [Importar Equipos](#importar-equipos)
+        * [Importar Jornadas](#importar-jornadas)
 * [Referencias](#referencias)
 
 # Permisos y Autenticación
@@ -315,7 +317,7 @@ GRANT  DATAPUMP_EXP_FULL_DATABASE  TO  backupu;
 Finalmente, se corre el siguiente comando
 
 ```zsh
-expdp backupu/backupu DIRECTORY=exp_equipos DUMPFILE=exp_eq.dmp LOGFILE=eq_lg.log TABLES=backupu.Jugador, backupu.Equipo CONTENT=METADATA_ONLY
+expdp backupu/backupu DIRECTORY=exp_equipos DUMPFILE=exp_eq.dmp LOGFILE=eq_lg.log TABLES=Jugador, Equipo CONTENT=METADATA_ONLY
 ```
 
 ![](img/res_eq.PNG)
@@ -326,13 +328,45 @@ Y ya en el directorio anterior aparece los archivos
 
 ### JORNADAS
 
+Crear un directorio para el respaldo de las jornadas, el cuál será ```C:\DataPump\ExportJornadas``` 
+
+![](img/carpeta2.PNG)
+
+Seguido se crea el directorio en Oracle
+
+```sql
+CREATE DIRECTORY exp_jornadas AS 'C:\DataPump\ExportJornadas';
+```
+
+![](img/dir_jor.PNG)
+
+Por último, se ejecuta el comando 
+
+```zsh
+expdp backupu/backupu DIRECTORY=exp_jornadas DUMPFILE=exp_jo.dmp LOGFILE=jo_lg.log TABLES=Liga, Jornada CONTENT=ALL
+```
+
+![](img/res_jo.PNG)
+
+Y ya en la carpeta se encuentran los archivos correspondientes
+
+![](img/car_jo.PNG)
+
 ## Importar
 
 ### Importar Equipos
 
 ```zsh
-impdp impeq/impeq DIRECTORY=exp_equipos DUMPFILE=exp_eq.dmp LOGFILE=eq_lg.log full=y
+impdp backupu/backupu DIRECTORY=exp_equipos DUMPFILE=exp_eq.dmp LOGFILE=eq_lg.log full=y TABLE_EXISTS_ACTION=REPLACE
 ```
+![](img/imp_eq.PNG)
+
+### Importar Jornadas
+
+```zsh
+impdp backupu/backupu DIRECTORY=exp_jornadas DUMPFILE=exp_jo.dmp LOGFILE=jo_lg.log full=y TABLE_EXISTS_ACTION=REPLACE
+```
+![](img/imp_jo.PNG)
 
 # Referencias
 ## 1 

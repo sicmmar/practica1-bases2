@@ -7,3 +7,9 @@ create user backupu identified by backupu
 default tablespace BACKUPTBS;
 
 grant all privileges to backupu;
+
+drop table equipo;
+drop table jugador;
+drop table jornada;
+drop table liga;
+drop table partido;
