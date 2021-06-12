@@ -13,6 +13,11 @@ Asunción Mariana Sic Sor **_201504051_**
     * [Configuración de Usuarios](#usuarios)
     * [Vista](#vista)
 * [Backup](#backup)
+    * [Configuración](#configuración)
+    * [Exportar](#exportar)
+        * [Base de Datos de Equipos](#equipos)
+        * [Base de Datos de Jornadas](#jornadas)
+    * [Importar](#importar)
 * [Referencias](#referencias)
 
 # Permisos y Autenticación
@@ -253,6 +258,85 @@ grant select on VOTOSPRESIDENTE to guest1;
 
 # Backup
 
+## Configuración
+
+Se ha creado un tablspace dedicado únicamente para esta base de datos y un usuario con todos los privilegios para el funcionamiento del mismo de la siguiente manera
+
+```sql
+create tablespace BACKUPTBS
+datafile 'BACKUPDTF.tbs'
+size 250M
+autoextend on maxsize 500M;
+
+create user backupu identified by backupu
+default tablespace BACKUPTBS;
+
+grant all privileges to backupu;
+```
+
+Finalmente, se crean las tablas y se insertan los datos
+
+![](img/b_data.PNG)
+
+## Exportar
+
+Para la exportación de datos se requiere lo siguiente
+
+|Base de Datos|Tablas|Restricciones|
+|:--:|:--:|:--:|
+|EQUIPOS|Jugador y Equipo|Exportar esquema|
+|JORNADAS|Liga y Jornada|Exportar esquema y datos|
+
+### EQUIPOS
+
+Se crea una carpeta dedicada únicamente para esta base de datos, en este caso, estará en ```C:\DataPump\ExportEquipos\```
+
+![](img/carpeta1.PNG)
+
+Luego se crea el directorio en Oracle
+
+```sql
+CREATE DIRECTORY exp_equipos AS 'C:\DataPump\ExportEquipos';
+```
+
+![](img/dir_eq.PNG)
+
+Dar privilegios del directorio al usuario ```backupu```
+
+```sql
+GRANT read, write ON DIRECTORY exp_equipos TO backupu;
+-- Dar tambien el privilegio de DATAPUMP_EXP_FULL_DATABASE **
+GRANT  DATAPUMP_EXP_FULL_DATABASE  TO  backupu;
+```
+> ** Este privilegio permite especificar ciertos esquemas
+> así como exportar información adicional para que mas tarde
+> en la importación se puedan re-crear los esquemas [[2]](#2)
+
+Finalmente, se corre el siguiente comando
+
+```zsh
+expdp backupu/backupu DIRECTORY=exp_equipos DUMPFILE=exp_eq.dmp LOGFILE=eq_lg.log TABLES=backupu.Jugador, backupu.Equipo CONTENT=METADATA_ONLY
+```
+
+![](img/res_eq.PNG)
+
+Y ya en el directorio anterior aparece los archivos
+
+![](img/cp_eq.PNG)
+
+### JORNADAS
+
+## Importar
+
+### Importar Equipos
+
+```zsh
+impdp impeq/impeq DIRECTORY=exp_equipos DUMPFILE=exp_eq.dmp LOGFILE=eq_lg.log full=y
+```
+
 # Referencias
 ## 1 
 Oracle (2019). Database Reference: 1.266 PROCESSES Junio 5, 2021, de Oracle Sitio web: [https://docs.oracle.com/en/database/oracle/oracle-database/18/refrn/PROCESSES.html#GUID-B757AF80-DA38-4167-A914-FE376A3AD4FE](https://docs.oracle.com/en/database/oracle/oracle-database/18/refrn/PROCESSES.html#GUID-B757AF80-DA38-4167-A914-FE376A3AD4FE)
+
+## 2
+Sharma, M. (2018). How to Export Schemas Using Expdp Data Pump Utility. Junio 11, 2021, de Rebellion Rider Sitio web: [http://www.rebellionrider.com/data-pump-expdp-how-to-export-schema-oracle/](http://www.rebellionrider.com/data-pump-expdp-how-to-export-schema-oracle/)
