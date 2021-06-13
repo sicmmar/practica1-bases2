@@ -13,3 +13,14 @@ drop table jugador;
 drop table jornada;
 drop table liga;
 drop table partido;
+
+
+create tablespace EQUIPOTBS
+datafile 'EQUIPODTF.tbs'
+size 250M
+autoextend on maxsize 500M;
+
+create user eq identified by eq
+default tablespace EQUIPOTBS;
+
+grant all privileges to eq;

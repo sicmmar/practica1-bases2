@@ -152,8 +152,19 @@ INSERT INTO Partido VALUES (22,TO_DATE('13-06-2019', 'DD-MM-YYYY'),0,1,11,5,3);
 
 COMMIT;
 
-SELECT * FROM PARTIDO;
+
 SELECT * FROM EQUIPO;
 SELECT * FROM JUGADOR;
+
+SELECT * FROM PARTIDO;
+
 SELECT * FROM LIGA;
 SELECT * FROM JORNADA;
+
+drop table equipo;
+drop table jugador;
+
+drop table jornada;
+drop table liga;
+
+drop table partido;

@@ -5,6 +5,9 @@ Desarrollado por:
 
 Asunción Mariana Sic Sor **_201504051_**
 
+
+> Repositorio en [GitHub](https://github.com/sicmmar/practica1-bases2)
+
 ## Tabla de Contenido
 
 * [Permisos y Autenticación](#permisos-y-autenticación)
@@ -91,13 +94,21 @@ Por esta razón, se extiende la memoria a 700 MB
 
 #### Processes
 
-Este parámetro modifica la cantidad máxima de procesos admitidos que el usuario puede realizar mientras utiliza Oracle en el Sistema Operativo anfitrión, por lo tanto dependerá del número de cores que contiene la máquina y por esa razón no se puede modificar el número [[1]](#1)
+Este parámetro modifica la cantidad máxima de procesos admitidos que el usuario puede realizar mientras utiliza Oracle en el Sistema Operativo anfitrión, por lo tanto dependerá del número de cores que contiene la máquina y por esa razón no se puede modificar el número [[1]](#1). En este caso, el valor de los procesos es de 640.
 
 ![](img/p_pr.PNG)
 
 #### Sessions
 
+Dado que este parametro depende directamente del parámetro anterior [```sessions= ( 1.5 * processes ) + 22```],[[2]](#2) en este caso ese valor es de ```sessions = ( 1.5 * 640 ) + 22 = 984```
 
+Este parámetro únicamente se puede cambiar en PDB
+
+![](img/pdb.PNG)
+
+De lo contrario, en CDB el valor será de 984
+
+![](img/cdb.PNG)
 
 #### PGA
 Se modifica de la siguiente manera 
@@ -312,7 +323,7 @@ GRANT  DATAPUMP_EXP_FULL_DATABASE  TO  backupu;
 ```
 > ** Este privilegio permite especificar ciertos esquemas
 > así como exportar información adicional para que mas tarde
-> en la importación se puedan re-crear los esquemas [[2]](#2)
+> en la importación se puedan re-crear los esquemas [[3]](#3)
 
 Finalmente, se corre el siguiente comando
 
@@ -373,4 +384,7 @@ impdp backupu/backupu DIRECTORY=exp_jornadas DUMPFILE=exp_jo.dmp LOGFILE=jo_lg.l
 Oracle (2019). Database Reference: 1.266 PROCESSES Junio 5, 2021, de Oracle Sitio web: [https://docs.oracle.com/en/database/oracle/oracle-database/18/refrn/PROCESSES.html#GUID-B757AF80-DA38-4167-A914-FE376A3AD4FE](https://docs.oracle.com/en/database/oracle/oracle-database/18/refrn/PROCESSES.html#GUID-B757AF80-DA38-4167-A914-FE376A3AD4FE)
 
 ## 2
+Oracle (2019). Database Reference: 1.301 SESSIONS Junio 12, 2021, de Oracle Sitio web: [https://docs.oracle.com/en/database/oracle/oracle-database/18/refrn/SESSIONS.html#GUID-52804B5A-164F-44F3-8980-F2593B58D807](https://docs.oracle.com/en/database/oracle/oracle-database/18/refrn/SESSIONS.html#GUID-52804B5A-164F-44F3-8980-F2593B58D807)
+
+## 3
 Sharma, M. (2018). How to Export Schemas Using Expdp Data Pump Utility. Junio 11, 2021, de Rebellion Rider Sitio web: [http://www.rebellionrider.com/data-pump-expdp-how-to-export-schema-oracle/](http://www.rebellionrider.com/data-pump-expdp-how-to-export-schema-oracle/)

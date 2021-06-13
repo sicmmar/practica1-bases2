@@ -8,6 +8,11 @@ default tablespace ELECCIONESTBS;
 
 grant all privileges to ELECCIONES;
 
+SELECT DISTINCT sgm.TABLESPACE_NAME , dtf.file_name, (dtf.bytes/1024)/1024 as MB,
+(dtf.maxbytes/1024)/1024 as MAX_MB
+FROM DBA_SEGMENTS sgm
+JOIN DBA_DATA_FILES dtf ON (sgm.TABLESPACE_NAME = dtf.TABLESPACE_NAME);
+
 -- PARAMETROS
 
 alter system set sga_target=500M;
@@ -18,8 +23,12 @@ alter system set processes=1500;
 show parameter processes;
 
 
-alter system set sessions=500;
+alter system set sessions = 500;
 show parameter sessions;
+show con_name;
+alter session set container=CDB$ROOT;
+alter session set container=PDB$SEED;
+
 
 alter system set pga_aggregate_target=100M;
 show parameter pga;
